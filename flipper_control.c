@@ -1,90 +1,56 @@
-#include "flipper_http/flipper_http.h"
+#include <furi.h>
+#include <gui/gui.h>
+#include <gui/view_port.h>
+#include <gui/canvas.h>
+#include <input/input.h>
+#include <flipper_http/flipper_http.h>
 
-#define TAG "Example"
+#define TAG "FlipperControlSample"
 
-int32_t hello_world_app(void *p)
-{
+typedef struct {
+    Gui* gui;
+    ViewPort* view_port;
+    bool running;
+} FlipperControlApp;
+
+static void render_callback(Canvas* canvas, void* ctx) {
+    UNUSED(ctx);
+    canvas_clear(canvas);
+
+    canvas_set_font(canvas, FontPrimary);
+    canvas_draw_str_aligned(canvas, 64, 24, AlignCenter, AlignCenter, "Flipper Control");
+
+    canvas_set_font(canvas, FontSecondary);
+    canvas_draw_str_aligned(canvas, 64, 40, AlignCenter, AlignCenter, "Sample app running");
+    canvas_draw_str_aligned(canvas, 64, 56, AlignCenter, AlignCenter, "Press Back to exit");
+}
+
+static void input_callback(InputEvent* event, void* ctx) {
+    FlipperControlApp* app = ctx;
+    if(event->type == InputTypeShort && event->key == InputKeyBack) {
+        app->running = false;
+    }
+}
+
+int32_t flipper_control_app(void* p) {
     UNUSED(p);
+    FlipperControlApp app = {0};
 
-    FlipperHTTP *fhttp = flipper_http_alloc();
-    if (!fhttp)
-    {
-        FURI_LOG_E(TAG, "Failed to allocate memory for FlipperHTTP");
-        return -1;
+    app.view_port = view_port_alloc();
+    view_port_draw_callback_set(app.view_port, render_callback, &app);
+    view_port_input_callback_set(app.view_port, input_callback, &app);
+
+    app.gui = furi_record_open(RECORD_GUI);
+    gui_add_view_port(app.gui, app.view_port, GuiLayerFullscreen);
+
+    app.running = true;
+    while(app.running) {
+        furi_delay_ms(10);
     }
 
-    if (!flipper_http_send_command(fhttp, HTTP_CMD_PING))
-    {
-        FURI_LOG_E(TAG, "Failed to ping the device");
-        return -1;
-    }
-    uint8_t counter = 10;
-    while (fhttp->state == INACTIVE && --counter > 0)
-    {
-        FURI_LOG_D(TAG, "Waiting for PONG");
-        furi_delay_ms(100);
-    }
-
-    if (counter == 0)
-    {
-        FURI_LOG_E(TAG, "Failed to receive PONG response");
-        return -1;
-    }
-
-    furi_delay_ms(500); // wait a bit for the request to finish
-
-    fhttp->state = IDLE;
-
-    if (!flipper_http_request(fhttp, GET, "https://catfact.ninja/fact", "{\"Content-Type\":\"application/json\"}", NULL))
-    {
-        FURI_LOG_E(TAG, "Failed to send GET request");
-        return -1;
-    }
-
-    fhttp->state = RECEIVING;
-
-    while (fhttp->state != IDLE)
-    {
-        furi_delay_ms(100);
-    }
-
-    FURI_LOG_I(TAG, "Received response: %s", fhttp->last_response);
-
-    /* Using JSMN library
-
-   char *fact = get_json_value(fhttp->last_response, "fact");
-   if (fact)
-   {
-       FURI_LOG_I(TAG, "Cat fact: %s", fact);
-   }
-   else
-   {
-       FURI_LOG_E(TAG, "Failed to parse cat fact");
-   }
-
-   */
-
-    /* Using Devboard JSON parser
-
-    char last_data[256];
-    snprintf(last_data, sizeof(last_data), "%s", fhttp->last_response);
-
-    memset(fhttp->last_response, 0, strlen(fhttp->last_response));
-    fhttp->last_response = NULL;
-
-    if(!flipper_http_parse_json(fhttp, "fact", last_data))
-    {
-        FURI_LOG_E(TAG, "Failed to parse cat fact");
-    }
-    while(!fhttp->last_response)
-    {
-        furi_delay_ms(100);
-    }
-
-    FURI_LOG_I(TAG, "Cat fact: %s", fhttp->last_response);
-    */
-
-    flipper_http_free(fhttp);
+    gui_remove_view_port(app.gui, app.view_port);
+    furi_record_close(RECORD_GUI);
+    view_port_free(app.view_port);
 
     return 0;
 }

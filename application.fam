@@ -7,11 +7,13 @@ App(
     entry_point="flipper_control_app",
     stack_size=2 * 1024,
     fap_category="Examples",
+    # Turn on verbose logging for this app
+    cdefines=["FURI_LOG_LEVEL=FURI_LOG_LEVEL_DEBUG"],
     # Optional values
     # fap_version="0.1",
-    fap_icon="flipper_control.png",  # 10x10 1-bit PNG
+    fap_icon="flipper_control.png",
     fap_description="Service to Receive images and sounds for Flipper Control!",
     fap_author="Venco",
     fap_weburl="https://github.com/v3nco/Flipper-Control",
-    fap_icon_assets="images",  # Image assets to compile for this application
+    fap_icon_assets="images",
 )
