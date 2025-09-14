@@ -2,7 +2,7 @@
 
 App(
     appid="flipper_control",  # Must be unique
-    name="App flipper_control",  # Displayed in menus
+    name="Flipper Control :3",  # Displayed in menus
     apptype=FlipperAppType.EXTERNAL,
     entry_point="flipper_control_app",
     stack_size=2 * 1024,
@@ -10,8 +10,8 @@ App(
     # Optional values
     # fap_version="0.1",
     fap_icon="flipper_control.png",  # 10x10 1-bit PNG
-    # fap_description="A simple app",
-    # fap_author="J. Doe",
-    # fap_weburl="https://github.com/user/flipper_control",
+    fap_description="Service to Receive images and sounds for Flipper Control!",
+    fap_author="Venco",
+    fap_weburl="https://github.com/v3nco/Flipper-Control",
     fap_icon_assets="images",  # Image assets to compile for this application
 )
