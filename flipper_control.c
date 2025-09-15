@@ -17,12 +17,12 @@ static void render_callback(Canvas* canvas, void* ctx) {
     UNUSED(ctx);
     canvas_clear(canvas);
 
-    canvas_set_font(canvas, FontPrimary);
-    canvas_draw_str_aligned(canvas, 64, 24, AlignCenter, AlignCenter, "Flipper Control");
 
-    canvas_set_font(canvas, FontSecondary);
-    canvas_draw_str_aligned(canvas, 64, 40, AlignCenter, AlignCenter, "Sample app running");
-    canvas_draw_str_aligned(canvas, 64, 56, AlignCenter, AlignCenter, "Press Back to exit");
+    for (uint8_t y = 0; y < 64; y++) {
+        for (uint8_t x = 0; x < 128; x++) {
+            canvas_draw_dot(canvas, x, y);
+        }
+    }
 }
 
 static void input_callback(InputEvent* event, void* ctx) {
