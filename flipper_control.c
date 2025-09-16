@@ -35,6 +35,14 @@ static void input_callback(InputEvent* event, void* ctx) {
 int32_t flipper_control_app(void* p) {
     UNUSED(p);
     FlipperControlApp app = {0};
+    FlipperHTTP *fhttp = flipper_http_alloc();
+
+    if (!fhttp) {
+        FURI_LOG_E("FlipperHTTP is missing");
+        return -1;
+    }
+
+
 
     app.view_port = view_port_alloc();
     view_port_draw_callback_set(app.view_port, render_callback, &app);
@@ -51,6 +59,7 @@ int32_t flipper_control_app(void* p) {
     gui_remove_view_port(app.gui, app.view_port);
     furi_record_close(RECORD_GUI);
     view_port_free(app.view_port);
+    flipper_http_free(FlipperHTTP *fhttp)
 
     return 0;
 }
