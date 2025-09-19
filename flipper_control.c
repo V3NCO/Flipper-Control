@@ -15,12 +15,15 @@ typedef struct {
 
 static void render_callback(Canvas* canvas, void* ctx) {
     UNUSED(ctx);
+    int todraw[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     canvas_clear(canvas);
 
 
     for (uint8_t y = 0; y < 64; y++) {
         for (uint8_t x = 0; x < 128; x++) {
-            canvas_draw_dot(canvas, x, y);
+            if (todraw[x] == 1) {
+                canvas_draw_dot(canvas, x, y);
+            }
         }
     }
 }
@@ -38,7 +41,6 @@ int32_t flipper_control_app(void* p) {
     FlipperHTTP *fhttp = flipper_http_alloc();
 
     if (!fhttp) {
-        FURI_LOG_E("FlipperHTTP is missing");
         return -1;
     }
 
@@ -59,7 +61,7 @@ int32_t flipper_control_app(void* p) {
     gui_remove_view_port(app.gui, app.view_port);
     furi_record_close(RECORD_GUI);
     view_port_free(app.view_port);
-    flipper_http_free(FlipperHTTP *fhttp)
+    flipper_http_free(fhttp);
 
     return 0;
 }
