@@ -5,5 +5,3 @@ dist/*
 .editorconfig
 .env
 .ufbt
-.fbt-toolchain
-toolchain

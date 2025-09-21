@@ -55,7 +55,24 @@ int32_t flipper_control_app(void* p) {
 
     app.running = true;
     while(app.running) {
-        furi_delay_ms(10);
+        furi_delay_ms(7500);
+
+        fhttp->state = IDLE;
+
+        if (!flipper_http_request(fhttp, GET, "https://catfact.ninja/fact", "{\"Content-Type\":\"application/json\"}", NULL))
+        {
+            FURI_LOG_E(TAG, "Failed to send GET request");
+            return -1;
+        }
+
+        fhttp->state = RECEIVING;
+
+        while (fhttp->state != IDLE)
+        {
+            furi_delay_ms(100);
+        }
+
+        FURI_LOG_I(TAG, "Received response: %s", fhttp->last_response);
     }
 
     gui_remove_view_port(app.gui, app.view_port);
