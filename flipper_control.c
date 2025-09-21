@@ -14,15 +14,15 @@ typedef struct {
     bool running;
 } FlipperControlApp;
 
-static void render_callback(Canvas* canvas, void* ctx) {
+static void render_callback(Canvas* canvas, int todraw[], void* ctx) {
     UNUSED(ctx);
-    int todraw[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    // int todraw[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     canvas_clear(canvas);
 
 
     for (uint8_t y = 0; y < 64; y++) {
         for (uint8_t x = 0; x < 128; x++) {
-            if (todraw[x] == 1) {
+            if (todraw[x*(y+1)] == 1) {
                 canvas_draw_dot(canvas, x, y);
             }
         }
@@ -60,7 +60,7 @@ int32_t flipper_control_app(void* p) {
 
         fhttp->state = IDLE;
 
-        if (!flipper_http_request(fhttp, GET, "https://catfact.ninja/fact", "{\"Content-Type\":\"application/json\"}", NULL))
+        if (!flipper_http_request(fhttp, GET, "https://example.com/api/actions", "{\"Content-Type\":\"application/json\"}", NULL))
         {
             FURI_LOG_E(TAG, "Failed to send GET request");
             return -1;
@@ -72,17 +72,17 @@ int32_t flipper_control_app(void* p) {
         {
             furi_delay_ms(100);
         }
-
+        // make something where it gets an item with all the intents of that command and then do if to execute each defined actions.
         FURI_LOG_I(TAG, "Received response: %s", fhttp->last_response);
 
-        char *fact = get_json_value(fhttp->last_response, "fact");
-        if (fact)
+        int *todraw[] = get_json_value(fhttp->last_response, "todraw");
+        if (todraw)
         {
-            FURI_LOG_I(TAG, "Cat fact: %s", fact);
+            FURI_LOG_I(TAG, "Got List: %s", todraw);
         }
         else
         {
-            FURI_LOG_E(TAG, "Failed to parse cat fact");
+            FURI_LOG_E(TAG, "Failed to parse list");
         }
     }
 
