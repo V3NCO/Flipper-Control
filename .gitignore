@@ -7,3 +7,5 @@ dist/*
 .ufbt
 .fbt-toolchain
 toolchain
+scripts
+.DS_STORE
