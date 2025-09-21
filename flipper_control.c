@@ -5,6 +5,7 @@
 #include <input/input.h>
 #include <flipper_http/flipper_http.h>
 
+// I Have no idea what this does but its here and i wont touch it
 #define TAG "FlipperControlSample"
 
 typedef struct {
@@ -73,6 +74,16 @@ int32_t flipper_control_app(void* p) {
         }
 
         FURI_LOG_I(TAG, "Received response: %s", fhttp->last_response);
+
+        char *fact = get_json_value(fhttp->last_response, "fact");
+        if (fact)
+        {
+            FURI_LOG_I(TAG, "Cat fact: %s", fact);
+        }
+        else
+        {
+            FURI_LOG_E(TAG, "Failed to parse cat fact");
+        }
     }
 
     gui_remove_view_port(app.gui, app.view_port);
