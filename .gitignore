@@ -9,3 +9,4 @@ dist/*
 toolchain
 scripts
 .DS_STORE
+__pycache__
