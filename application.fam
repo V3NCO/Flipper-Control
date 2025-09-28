@@ -9,11 +9,17 @@ App(
     fap_category="Examples",
     # Turn on verbose logging for this app
     cdefines=["FURI_LOG_LEVEL=FURI_LOG_LEVEL_DEBUG"],
+    # Explicitly specify source files to include
+    sources=[
+        "flipper_control.c",
+        "flipper_http/flipper_http.c",
+        "cJSON/cJSON.c"
+    ],
     # Optional values
     # fap_version="0.1",
-    fap_icon="flipper_control.png",
+    # fap_icon="flipper_control.png",
     fap_description="Service to Receive images and sounds for Flipper Control!",
     fap_author="Venco",
     fap_weburl="https://github.com/v3nco/Flipper-Control",
-    fap_icon_assets="images",
+    # fap_icon_assets="images",
 )

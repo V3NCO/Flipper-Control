@@ -1,0 +1,26 @@
+# Python virtual environment
+venv/
+venv/**
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+**/*.so
+
+# Build artifacts
+**/build/
+**/dist/
+**/*.egg-info/
+
+# Development environments
+.vscode/
+.idea/
+.DS_Store
+
+# Git
+.git/
+.gitignore
+
+# Other files not needed for firmware
+*.md
+LICENSE
+requirements.txt

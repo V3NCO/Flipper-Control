@@ -10,4 +10,10 @@ toolchain
 scripts
 .DS_STORE
 __pycache__
-venv
+# Python virtual environments
+venv/
+env/
+.venv/
+.env/
+ENV/
+pythonenv*/
