@@ -36,4 +36,4 @@ async def screen_set(item: Screen):
 
 @app.get("/screen/")
 async def screen_give():
-    return {"message": list(Store.get_screen())}
+    return {"todraw": list(map(int, list(Store.get_screen())))}
