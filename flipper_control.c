@@ -120,7 +120,7 @@ int32_t flipper_control_app(void* p) {
         furi_delay_ms(7500);
         fhttp->state = IDLE;
 
-        if (!flipper_http_request(fhttp, GET, "https://192.168.0.24:8000/screen", "{\"Content-Type\":\"application/json\"}", NULL))
+        if (!flipper_http_request(fhttp, GET, "http://192.168.0.24:8000/screen", "{\"Content-Type\":\"application/json\"}", NULL))
         {
             FURI_LOG_E(TAG, "Failed to send GET request");
             continue;
