@@ -12,17 +12,18 @@ typedef struct {
     Gui* gui;
     ViewPort* view_port;
     bool running;
+    uint8_t* todraw;
 } FlipperControlApp;
 
-static void render_callback(Canvas* canvas, int todraw[], void* ctx) {
-    UNUSED(ctx);
+static void render_callback(Canvas* canvas, void* ctx) {
+    FlipperControlApp* app = ctx;
     // int todraw[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     canvas_clear(canvas);
 
 
     for (uint8_t y = 0; y < 64; y++) {
         for (uint8_t x = 0; x < 128; x++) {
-            if (todraw[x*(y+1)] == 1) {
+            if (app->todraw[y * 128 + x] == 1) {
                 canvas_draw_dot(canvas, x, y);
             }
         }
@@ -78,7 +79,7 @@ int32_t flipper_control_app(void* p) {
         int *todraw[] = get_json_value(fhttp->last_response, "todraw");
         if (todraw)
         {
-            FURI_LOG_I(TAG, "Got List: %s", todraw);
+            FURI_LOG_I(TAG, "Got List: %s", char* todraw);
         }
         else
         {
